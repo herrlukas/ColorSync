@@ -26,7 +26,6 @@
 ###############################################################################
 
 $global:uri = "http://localhost:54235/razer/chromasdk"
-$global:colorBGR_old = ""
 $global:keyboardEndpoint = "keyboard"
 $global:heartbeatEndpoint = "heartbeat"
 
@@ -95,15 +94,6 @@ function Set-KeyboardColor {
     Invoke-WebRequest @parameters | Out-Null
 }
 
-function Invoke-Heartbeat {
-    $parameters = @{
-        Method      = 'PUT'
-        Uri         = $global:uri + $global:heartbeatEndpoint
-        ContentType = 'application/json'
-    }
-    Invoke-RestMethod @parameters | Out-Null
-}
-
 ###############################################################################
 # Main Block                                                                  #
 ###############################################################################
@@ -115,13 +105,7 @@ Start-Sleep -s 3
 try {
     while ($true) {
         Get-AccentColor
-        if ($global:colorBGR -ne $global:colorBGR_old) {
-            Set-KeyboardColor
-            $global:colorBGR_old = $global:colorBGR
-        }
-        else {
-            Invoke-Heartbeat
-        }
+        Set-KeyboardColor
         Start-Sleep -s 1
     }
 }
